@@ -1,0 +1,82 @@
+body {
+    margin: 10px;
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 420px;
+    height: 420px;
+    border: 2px solid black;
+}
+
+.grid div {
+    width: 15px;
+    height: 15px;
+    box-sizing: border-box;
+}
+
+.pac-dot {
+    background-color: green;
+    border: 5px solid rgb(223, 223, 223);
+}
+
+.wall {
+    background-color: rgb(29, 29, 247);
+}
+.power-pellet {
+    background-color: green;
+    border-radius: 7.5px;
+}
+.pacman {
+    background-color: rgb(253, 237, 4);
+    border-radius: 7.5px;
+    border: none;
+}
+.blinky {
+    background-color: red;
+    border: none;
+}
+.pinky {
+    background-color: rgb(255, 64, 96);
+    border: none;
+}
+.inky {
+    background-color: rgb(0, 132, 255);
+    border: none;
+}
+.clyde {
+    background-color: orange;
+    border: none;
+}
+.scared-ghost {
+    background-color: aquamarine;
+}
+
+#start-button, #restart-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    background-color: yellow;
+    border: 2px solid black;
+    text-align: center;
+    font-style: italic;
+    font-family: cursive;
+}
+#restart-button {
+    display: none;
+} 
+
+h1, h3{
+    font-style: italic;
+    font-family: cursive;
+}
+h1{
+    font-weight: 800;
+}
+h3{
+    font-weight: 700;
+}
