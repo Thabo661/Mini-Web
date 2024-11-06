@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .player-container {
+            width: 640px;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .media-player {
+            width: 100%;
+            max-height: 360px;
+            background-color: #000;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #444;
+        }
+        .control-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .control-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background-color: #666;
+            cursor: pointer;
+        }
+        .progress {
+            width: 0;
+            height: 100%;
+            background-color: #4CAF50;
+        }
+        .time-display {
+            color: white;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        #fileInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <video class="media-player" id="mediaPlayer"></video>
+        <div class="progress-bar" id="progressBar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="controls">
+            <button class="control-btn" id="playPauseBtn">▶</button>
+            <button class="control-btn" id="stopBtn">■</button>
+            <button class="control-btn" id="rewindBtn">⏪</button>
+            <button class="control-btn" id="forwardBtn">⏩</button>
+            <button class="control-btn" id="volumeBtn">🔊</button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1" style="width: 80px;">
+            <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            <input type="file" id="fileInput" accept="video/*,audio/*">
+            <button class="control-btn" id="openFileBtn">📂</button>
+        </div>
+    </div>
+
+    <script>
+        const mediaPlayer = document.getElementById('mediaPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const fileInput = document.getElementById('fileInput');
+        const openFileBtn = document.getElementById('openFileBtn');
+
+        function togglePlayPause() {
+            if (mediaPlayer.paused) {
+                mediaPlayer.play();
+                playPauseBtn.textContent = '⏸';
+            } else {
+                mediaPlayer.pause();
+                playPauseBtn.textContent = '▶';
+            }
+        }
+
+        function stopMedia() {
+            mediaPlayer.pause();
+            mediaPlayer.currentTime = 0;
+            playPauseBtn.textContent = '▶';
+        }
+
+        function rewindMedia() {
+            mediaPlayer.currentTime -= 10;
+        }
+
+        function forwardMedia() {
+            mediaPlayer.currentTime += 10;
+        }
+
+        function updateProgress() {
+            const value = (mediaPlayer.currentTime / mediaPlayer.duration) * 100;
+            progress.style.width = value + '%';
+            
+            const currentMinutes = Math.floor(mediaPlayer.currentTime / 60);
+            const currentSeconds = Math.floor(mediaPlayer.currentTime % 60);
+            const durationMinutes = Math.floor(mediaPlayer.duration / 60) || 0;
+            const durationSeconds = Math.floor(mediaPlayer.duration % 60) || 0;
+            
+            timeDisplay.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function setProgress(e) {
+            const newTime = (e.offsetX / progressBar.offsetWidth) * mediaPlayer.duration;
+            mediaPlayer.currentTime = newTime;
+        }
+
+        function toggleMute() {
+            mediaPlayer.muted = !mediaPlayer.muted;
+            volumeBtn.textContent = mediaPlayer.muted ? '🔇' : '🔊';
+        }
+
+        function handleVolumeChange() {
+            mediaPlayer.volume = volumeSlider.value;
+            volumeBtn.textContent = mediaPlayer.volume === 0 ? '🔇' : '🔊';
+        }
+
+        function openFile() {
+            fileInput.click();
+        }
+
+        function loadFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                mediaPlayer.src = fileURL;
+                mediaPlayer.load();
+                playPauseBtn.textContent = '▶';
+            }
+        }
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        stopBtn.addEventListener('click', stopMedia);
+        rewindBtn.addEventListener('click', rewindMedia);
+        forwardBtn.addEventListener('click', forwardMedia);
+        volumeBtn.addEventListener('click', toggleMute);
+        volumeSlider.addEventListener('input', handleVolumeChange);
+        progressBar.addEventListener('click', setProgress);
+        openFileBtn.addEventListener('click', openFile);
+        fileInput.addEventListener('change', loadFile);
+
+        mediaPlayer.addEventListener('timeupdate', updateProgress);
+        mediaPlayer.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶';
+        });
+    </script>
+</body>
+</html>
